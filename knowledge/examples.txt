@@ -1,0 +1,177 @@
+Examples task list for a mutual fund app.
+<example_1>
+ ### Task List for Mutual Fund App
+
+         #### **UI DESIGN**
+         1. **Authentication Screens**
+            - *Login Screen UI Design*
+            - *Registration Screen UI Design*
+            - *Forgot Password Screen UI Design*
+            - *KYC Check Screen UI Design*
+         2. **Mutual Fund Browsing**
+            - *Home Screen UI Design*
+            - *Mutual Fund Listing Screen UI Design*
+            - *Search Screen UI Design*
+         3. **Investment Tracking**
+            - *Portfolio Screen UI Design*
+            - *Investment Details Screen UI Design*
+         4. **Transaction Capabilities**
+            - *Investment Screen UI Design*
+            - *Transaction History Screen UI Design*
+         5. **Protfolio Analytics**
+            - *Protfolio Dashboard Screen UI Design*
+            - *Graphs and Charts UI Design*
+
+         #### **BACKEND DEVELOPMENT**
+         1. **Project Setup**
+            - *Create New Node Project*
+            - *Install Express*
+            - *Implement Middleware*
+            - *Implement Routing*
+            - *Implement Error Handling*
+         1. **Database Design**
+            - *User Collection*
+            - *Mutual Fund Collection*
+            - *Transaction Collection*
+            - *Investment Collection*
+
+         2. **Authentication**
+            - *Login API*
+            - *Registration API*
+            - *Forgot Password API*
+            - *KYC Check Screen API*
+         3. **Mutual Fund Listing**
+            - *Mutual Fund Listing API*
+            - *Mutual Fund Details API*
+            - *Search API*
+         4. **Investment Tracking**
+            - *Portfolio API*
+            - *Investment Details API*
+         5. **Transaction Module**
+            - *Investment API*
+            - *Transaction History API*
+         6. **Portfolio Analytics**
+            - *Portfolio Dashboard API*
+            - *Graphs and Charts Data API*
+
+         #### **FRONTEND DEVELOPMENT**
+         1. **Project Setup**
+            - *Create Flutter App*
+            - *Implement Routing using AutoRoute*
+            - *Implement State Management*
+            - *Implement GetIt For Dependency Injection*
+            - *Add Splash Screen*
+         1. **Authentication**
+            - *UI Design*
+                - Login Screen UI Design
+                - Registration Screen UI Design
+                - Forgot Password Screen UI Design
+                - Check KYC Screen UI Design
+            - *API Integration*
+                - Login Screen Api Integration
+                - Registration Screen Api Integration
+                - Forgot Password Screen Api Integration
+                - Check KYC Screen Api Integration
+         2. **Mutual Fund Listing**
+            - *UI Design*
+                - Home Screen UI Design
+                - Mutual Fund Listing Screen UI Design
+                - Search Screen UI Design
+            - *API Integration*
+                - Home Screen Api Integration
+                - Mutual Fund Listing Api Integration
+                - Search Screen Api Integration
+         3. **Investment Tracking**
+            - *UI Design*
+                - Portfolio Screen Ui Design
+                - Investment Details Screen Ui Design
+            - *API Integration*
+                - Portfolio Screen Api Integration
+                - Investment Details Screen Api Integration
+         4. **Transaction Module**
+            - *UI Design*
+                - Investment Screen Ui Design
+                - Transaction History Ui Design
+            - *API Integration*
+                - Investment Screen Api Integration
+                - Transaction History Screen Api Integration
+
+         5. **Protfolio Analytics**
+            - *UI Design*
+                - Protfolio Dashboard Screen Ui Design
+                - Graphs and Charts Plugin Implement
+            - *API Integration*
+                - Protfolio Dashboard Screen Api Integration
+                - Graphs and Charts Api Integration
+         #### **TESTING & DEPLOYMENT**
+         1. **Unit Testing**
+            - *Backend Unit Testing*
+            - *Frontend Unit Testing*
+         2. **Integration Testing**
+            - *API Integration Testing*
+            - *Frontend-Backend Integration Testing*
+         3. **Deployment**
+            - *Setting Up CI/CD Pipeline*
+            - *Deploying Backend*
+            - *Deploying Frontend*
+         4. **Performance Monitoring**
+            - *Setting Up Performance Monitoring Tools*
+
+'''
+<example_1>
+
+Example for a push-up tracking app
+<example_2>
+### Task List for Pushup Tracking App
+
+         #### **UI DESIGN**
+         1. **Home Screen**
+            - *Home Screen UI Design*
+            - *Pushup Input Form Design*
+            - *Daily Pushup Count Display Design*
+
+         #### **BACKEND DEVELOPMENT**
+         1. **Project Setup**
+            - *Create New Node Project*
+            - *Install Express*
+            - *Implement Middleware*
+            - *Implement Routing*
+            - *Implement Error Handling*
+
+         2. **Database Design**
+            - *User Collection (if needed for future authentication)*
+            - *Pushup Tracking Collection*
+
+         3. **API Development**
+            - *POST API to Save Daily Pushup Count*
+            - *GET API to Retrieve Pushup Data*
+
+         #### **FRONTEND DEVELOPMENT**
+         1. **Project Setup**
+            - *Create Flutter App*
+            - *Add Reverpod for State Management*
+            - *Add Auto Route for Routing*
+
+         2. **UI Implementation**
+            - *Home Screen Implementation*
+            - *Pushup Input Form Implementation*
+
+         3. **Backend Integration**
+            - *Integrate Save Pushup Count API*
+            - *Integrate Retrieve Pushup Data API*
+
+         #### **TESTING & DEPLOYMENT**
+         1. **Unit Testing**
+            - *Test Pushup Count Saving Functionality*
+            - *Test Data Retrieval Functionality*
+
+         2. **Integration Testing**
+            - *Test API Integration with Frontend*
+            - *Test Local Database Integration*
+
+         3. **Deployment**
+            - *Set Up CI/CD Pipeline*
+            - *Deploy Backend to Cloud Server*
+            - *Publish Flutter App to App Store/Play Store*
+'''
+<example_2>

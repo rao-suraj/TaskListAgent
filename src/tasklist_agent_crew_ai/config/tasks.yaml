@@ -1,0 +1,34 @@
+requirement_generation_task:
+  description: >
+    Create a detailed Product Requirements Document and Technical Requirements Document for {user_input}
+    by asking human relevant questions (try to keep question asked to human less then 3 and group the question)regarding the project using Humand Interaction tool. 
+  expected_output: >
+    Product Requirements Document and Technical Requirements Document in text fromat or question that the human need to answer.
+  agent: business_analyst
+
+execution_plannig_task:
+  description: >
+    Understand the Product Requirements Document and Technical Requirements Document you got from the 
+    context for {user_input}and create a Software Design Document that contains detailed information about project execution.
+    Do not add anything new example feature, modules or tech that is not mentioned in Software Design Document.
+  expected_output: >
+    Software Design Document in text format.
+  agent: developer
+  context: ["requirement_generation_task"]
+
+task_list_creation_task:
+  description: >
+    Use the Software Design Document from the context provided to you for {user_input} and create a task list using which developers can execute the project and deliver it on time.
+    Do not add anything new example feature, modules or tech that is not mentioned in Software Design Document.
+  expected_output: >
+    Task list in text format structured into bullet points.
+  agent: project_manager
+  context: ["execution_plannig_task"]
+
+# respond_to_user_query_task:
+#   description: >
+#     Get the user data from knowledge base and respond to the user query. User question is : {user_input}
+#   expected_output: >
+#     answer to the user query.
+#   agent: about_user_agent
+
