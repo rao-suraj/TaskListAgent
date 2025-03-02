@@ -17,8 +17,8 @@ def run():
     """
     Run the crew.
     """
-    # prompt = input("\nEnter prompt: ")
-    prompt = "Give me task list for meditation app"
+    prompt = input("\nEnter prompt: ")
+    # prompt = "Give me task list for meditation app"
     if not prompt:
         return
     inputs = {
