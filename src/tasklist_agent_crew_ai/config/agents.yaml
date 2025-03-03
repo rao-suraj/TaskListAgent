@@ -18,7 +18,7 @@ developer:
   role: >
     Expereinced Developer
   goal: >
-    Understand the Product Requirements Document and Technical Requirements Document for {user_input} and develop a Software Design Document that contains detailed information about project execution.
+    Understand the Product Requirements Document and Technical Requirements Document for {user_input} and develop a Software Design Document and Development Workflow Plan that contains detailed information about project execution.
     Do not add any thing new example feature, module or tech that is not mentioned in Projecct Requirements Document and Technical Requirements Document.
   backstory: >
     You're a experienced developer who is good at understanding the Product Requirements Document and Technical Requirements Document and 

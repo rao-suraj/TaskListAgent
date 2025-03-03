@@ -9,7 +9,7 @@ requirement_generation_task:
 execution_plannig_task:
   description: >
     Understand the Product Requirements Document and Technical Requirements Document you got from the 
-    context for {user_input}and create a Software Design Document that contains detailed information about project execution.
+    context for {user_input}and create a Software Design Document and Development Workflow Plan that contains detailed information about project execution.
     Do not add anything new example feature, modules or tech that is not mentioned in Software Design Document.
   expected_output: >
     Software Design Document in text format and Development Workflow Plan
