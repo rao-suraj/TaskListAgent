@@ -1,12 +1,14 @@
 requirement_generation_task:
   description: >
-    Create a detailed Product Requirements Document and Technical Requirements Document for human input
+    Converse with human for the project related input
     <human_input>
     {user_input}
     </human_input>
+    and understand the project function, non functional and technical requirements and create Product Requirements Document and Technical Requirements Document.
     <instructions>
-    1. Ask Human relevant questions for getting all the details that a good Product Requirements Document and Technical Requirements Document should have.
-    2. Make sure you have all the details required for creating a Software Design Document and Development Workflow Plan and Order of Execution.
+      1.IMPROTANT: Ask human relevant questions regarding function and tech stack if not specified by user using human interaction tool. Don't assume features and tech stack by yourself 
+      2.IMPORTANT: Group related question together for reducing the number of questions.
+      3.IMPORTANT: At the end ask for human confirmation by providing the documents using human interaction. Then provide the final output.
     </instructions>
   expected_output: >
     Product Requirements Document and Technical Requirements Document.
@@ -51,14 +53,16 @@ requirement_generation_task:
 
 execution_plannig_task:
   description: >
-    Understand the Product Requirements Document and Technical Requirements Document you got from the context (OUTPUT OF requirement_generation_task)
-    for human input
+    Understand the Product Requirements Document and Technical Requirements Document for human input
     <human_input>
     {user_input}
-    <human_input>
-    <instructions>
-    1. Make sure that Development Workflow has detaied execution plan. Including detailed execution by specifying third party services, tech stack and other details.
-    </instructions>
+    </human_input> 
+    and develop a Software Design Document, Development Workflow Plan and Order of execution.
+    <instruction>
+    1.Do not add any thing new example feature, module or tech that is not mentioned in Projecct Requirements Document and Technical Requirements Document.
+    2.IMPORTANT: Include Detailed execution plan in Development Workflow Plan.
+      Example: Wrong "use Payment gateway for payment" Correct "Integrate Razorpay API for payment"
+    </instruction>
   expected_output: >
     Software Design Document, Development Workflow Plan and Order of execution 
     <software_design_document_structure>
@@ -98,13 +102,16 @@ execution_plannig_task:
 
 task_list_creation_task:
   description: >
-    Use the Software Design Document, Development Workflow Plan and Order of execution from the context (OUTPUT OF execution_plan_task) provided to you for human input 
+    Use the Software Design Document, Developmet Workflow Plan and Order of execution for humand input
     <human_input>
     {user_input}
-    </human_input> 
-    and create a task list using which developers can execute the project and deliver it on time.
+    </human_input>
+    and create a task list.
+    <instruction>
+    1.Do not add anything new example feature, modules or tech, screens etc to the task list that is not mentioned in Software Design Document,Development WorkFlow Plan or Order of execution.
+    1.Include modules like UI Design, Backend Development, API Development, Testing and Deployment  in the task list if applicable.
+    </instruction>
   expected_output: >
-    Task list for the project.
     <task_list_structure>
     ### Task list for [App Name]
       #### [Department Name]
@@ -119,5 +126,19 @@ task_list_creation_task:
               *[Sub Task Name]*: [Task Description]
               *[Sub Task Name]*
     </task_list_structure>
+    <exmaple_task_list>
+     ### Task List for Mutual Fund App
+
+         #### **UI DESIGN**
+         1. **Authentication Module**
+            - *Login Screen UI Design*
+            - *Registration Screen UI Design*
+            - *Forgot Password Screen UI Design*
+            - *KYC Check Screen UI Design*
+         2. **Mutual Fund Browsing Module**
+            - *Home Screen UI Design*
+            - *Mutual Fund Listing Screen UI Design*
+            - *Search Screen UI Design*
+    </example_task_list>
   agent: project_manager
   context: ["execution_plannig_task"]
