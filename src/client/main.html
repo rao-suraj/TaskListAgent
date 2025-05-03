@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CrewAI WebSocket Client</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    #log { white-space: pre-wrap; background: #f0f0f0; padding: 10px; border-radius: 8px; max-height: 300px; overflow-y: auto; }
+    input, button { padding: 6px 10px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <h2>CrewAI WebSocket Client</h2>
+
+  <label for="startInput">Start message:</label><br>
+  <input id="startInput" type="text" value="Plan a product launch event" style="width: 300px;"><br>
+  <button onclick="startProcess()">Start</button>
+
+  <div id="questionArea" style="margin-top: 20px; display: none;">
+    <label for="answerInput">Agent question:</label><br>
+    <div id="currentQuestion" style="margin: 10px 0; font-weight: bold;"></div>
+    <input id="answerInput" type="text" style="width: 300px;">
+    <button onclick="sendAnswer()">Send Answer</button>
+  </div>
+
+  <h3>Log:</h3>
+  <div id="log"></div>
+
+  <script>
+    let socket;
+
+    function log(message) {
+      const logDiv = document.getElementById("log");
+      logDiv.textContent += message + "\n";
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    function startProcess() {
+      const input = document.getElementById("startInput").value;
+      socket = new WebSocket("ws://localhost:8000/api/ws");
+
+      socket.onopen = () => {
+        log("WebSocket connection opened.");
+        socket.send(JSON.stringify({
+          event: "start",
+          message: input
+        }));
+      };
+
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        log("Received: " + JSON.stringify(data));
+
+        if (data.type === "question") {
+          document.getElementById("questionArea").style.display = "block";
+          document.getElementById("currentQuestion").textContent = data.question;
+        }
+
+        if (data.type === "final_result") {
+          alert("Final result: " + data.result);
+          document.getElementById("questionArea").style.display = "none";
+        }
+      };
+
+      socket.onclose = () => {
+        log("WebSocket connection closed.");
+      };
+
+      socket.onerror = (error) => {
+        log("WebSocket error: " + error.message);
+      };
+    }
+
+    function sendAnswer() {
+      const answer = document.getElementById("answerInput").value;
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: "answer", answer: answer }));
+        log("Sent answer: " + answer);
+        document.getElementById("answerInput").value = "";
+        document.getElementById("questionArea").style.display = "none";
+      }
+    }
+  </script>
+
+</body>
+</html>
