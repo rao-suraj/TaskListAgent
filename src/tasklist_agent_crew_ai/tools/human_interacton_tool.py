@@ -17,4 +17,7 @@ class HumanInteractionTool(BaseTool):
         crew_service.question_queue.put(argument)
         res = crew_service.answer_queue.get()
         print(f"Human Interaction Tool: {res}")
+
+        # for termianl input
+        # res = input(f"{argument} \n")
         return res

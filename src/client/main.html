@@ -58,8 +58,8 @@
         }
 
         if (data.type === "final_result") {
-          alert("Final result: " + data.result);
-          document.getElementById("questionArea").style.display = "none";
+          document.getElementById("questionArea").style.display = "block";
+          document.getElementById("currentQuestion").textContent = data.result;
         }
       };
 
