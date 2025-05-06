@@ -2,6 +2,7 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.knowledge.source.text_file_knowledge_source import TextFileKnowledgeSource
 from tasklist_agent_crew_ai.tools.human_interacton_tool import HumanInteractionTool
+from tasklist_agent_crew_ai.tools.tavity_search_tool import TavilySearchTool
 import os
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -22,13 +23,16 @@ class TasklistAgentCrewAi():
 		return Agent(
 			config=self.agents_config['business_analyst'],
 			verbose=True,
+			multimodal=True,
+			tools=[HumanInteractionTool(),TavilySearchTool()],
 		)
 
 	@agent
 	def developer(self) -> Agent:
 		return Agent(
 			config=self.agents_config['developer'],
-			verbose=True
+			verbose=True,
+			tools=[TavilySearchTool()],
 		)
 	
 	@agent
@@ -50,7 +54,6 @@ class TasklistAgentCrewAi():
 	def requirement_generation_task(self) -> Task:
 		return Task(
 			config=self.tasks_config['requirement_generation_task'],
-			tools=[HumanInteractionTool()],
 		)
 
 	@task

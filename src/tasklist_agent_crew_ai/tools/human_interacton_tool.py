@@ -14,10 +14,10 @@ class HumanInteractionTool(BaseTool):
     args_schema: Type[BaseModel] = HumanInteractionInput
 
     def _run(self, argument: str) -> str:
-        crew_service.question_queue.put(argument)
-        res = crew_service.answer_queue.get()
-        print(f"Human Interaction Tool: {res}")
+        # crew_service.question_queue.put(argument)
+        # res = crew_service.answer_queue.get()
+        # print(f"Human Interaction Tool: {res}")
 
         # for termianl input
-        # res = input(f"{argument} \n")
+        res = input(f"{argument} \n")
         return res

@@ -9,6 +9,7 @@ requirement_generation_task:
       1.IMPROTANT: Ask human relevant questions regarding function and tech stack if not specified by user using human interaction tool. Don't assume features and tech stack by yourself.Keep the number of quesion less then 3. 
       2.IMPORTANT: Group related question together for reducing the number of questions.
       3.IMPORTANT: At the end ask for human confirmation by providing the documents using human interaction. Then provide the final output.
+      4.Use the web search tool to get additional information if required.
     </instructions>
   expected_output: >
     Product Requirements Document and Technical Requirements Document.
@@ -62,6 +63,7 @@ execution_plannig_task:
     1.Do not add any thing new example feature, module or tech that is not mentioned in Projecct Requirements Document and Technical Requirements Document.
     2.IMPORTANT: Include Detailed execution plan in Development Workflow Plan.
       Example: Wrong "use Payment gateway for payment" Correct "Integrate Razorpay API for payment"
+    3.Use the web search tool for latest tech related info.
     </instruction>
   expected_output: >
     Software Design Document, Development Workflow Plan and Order of execution 
@@ -109,7 +111,7 @@ task_list_creation_task:
     and create a task list.
     <instruction>
     1.Do not add anything new example feature, modules or tech, screens etc to the task list that is not mentioned in Software Design Document,Development WorkFlow Plan or Order of execution.
-    1.Include modules like UI Design, Backend Development, API Development, Testing and Deployment  in the task list if applicable.
+    2.Include modules like UI Design, Backend Development, API Development, Testing and Deployment  in the task list if applicable.
     </instruction>
   expected_output: >
     <task_list_structure>
