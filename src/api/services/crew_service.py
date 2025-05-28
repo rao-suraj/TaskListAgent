@@ -41,6 +41,8 @@ class CrewService:
     
     def run_crew_process(self,message: str, result_queue: queue.Queue):
         try:
+            self.question_queue=queue.Queue()  # Clear any previous questions
+            self.answer_queue=queue.Queue()  # Clear any previous answers
             result = self.crew.kickoff(inputs={"user_input": message})
             print(f"Result from crew: {result}")
             result_queue.put({"type": "final_result", "result": str(result)})

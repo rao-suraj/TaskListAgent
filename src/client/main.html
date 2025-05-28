@@ -4,83 +4,339 @@
   <meta charset="UTF-8">
   <title>CrewAI WebSocket Client</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    #log { white-space: pre-wrap; background: #f0f0f0; padding: 10px; border-radius: 8px; max-height: 300px; overflow-y: auto; }
-    input, button { padding: 6px 10px; margin-top: 10px; }
+    body { 
+      font-family: Arial, sans-serif; 
+      padding: 20px; 
+      max-width: 1000px; 
+      margin: 0 auto;
+    }
+    .section {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .section h3 {
+      margin-top: 0;
+      color: #333;
+    }
+    #log { 
+      white-space: pre-wrap; 
+      background: #f8f8f8; 
+      padding: 15px; 
+      border-radius: 8px; 
+      max-height: 400px; 
+      overflow-y: auto; 
+      border: 1px solid #ddd;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+    }
+    input, button, textarea { 
+      padding: 8px 12px; 
+      margin: 5px; 
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    button:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+    }
+    .status {
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    .status.connected {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .status.disconnected {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .status.authenticated {
+      background: #cce7ff;
+      color: #004085;
+      border: 1px solid #b3d7ff;
+    }
+    input[type="text"], textarea {
+      width: 300px;
+    }
+    textarea {
+      height: 80px;
+      resize: vertical;
+    }
+    .inline {
+      display: inline-block;
+      vertical-align: top;
+    }
   </style>
 </head>
 <body>
 
-  <h2>CrewAI WebSocket Client</h2>
+  <h2>CrewAI WebSocket Test Client</h2>
 
-  <label for="startInput">Start message:</label><br>
-  <input id="startInput" type="text" value="Plan a product launch event" style="width: 300px;"><br>
-  <button onclick="startProcess()">Start</button>
-
-  <div id="questionArea" style="margin-top: 20px; display: none;">
-    <label for="answerInput">Agent question:</label><br>
-    <div id="currentQuestion" style="margin: 10px 0; font-weight: bold;"></div>
-    <input id="answerInput" type="text" style="width: 300px;">
-    <button onclick="sendAnswer()">Send Answer</button>
+  <!-- Session Creation Section -->
+  <div class="section">
+    <h3>1. Create Session</h3>
+    <div>
+      <label>Google API Key:</label><br>
+      <input type="text" id="googleApiKey" placeholder="Enter your Google API key" style="width: 400px;">
+    </div>
+    <div>
+      <label>Tavily API Key (optional):</label><br>
+      <input type="text" id="tavilyApiKey" placeholder="Enter your Tavily API key (optional)" style="width: 400px;">
+    </div>
+    <div>
+      <button onclick="createSession()">Create Session</button>
+    </div>
+    <div id="sessionStatus"></div>
   </div>
 
-  <h3>Log:</h3>
-  <div id="log"></div>
+  <!-- WebSocket Connection Section -->
+  <div class="section">
+    <h3>2. WebSocket Connection</h3>
+    <div>
+      <label>WebSocket URL:</label><br>
+      <input type="text" id="wsUrl" value="ws://localhost:8000/api/ws" style="width: 400px;">
+    </div>
+    <div>
+      <button onclick="connectWebSocket()" id="connectBtn">Connect WebSocket</button>
+      <button onclick="disconnectWebSocket()" id="disconnectBtn" disabled>Disconnect</button>
+    </div>
+    <div id="connectionStatus" class="status disconnected">Disconnected</div>
+  </div>
+
+  <!-- Message Sending Section -->
+  <div class="section">
+    <h3>3. Send Messages</h3>
+    <div class="inline">
+      <label>Task Message:</label><br>
+      <textarea id="taskMessage" placeholder="Enter your task message here...">Create a comprehensive task list for planning a birthday party</textarea><br>
+      <button onclick="startTask()" id="startBtn" disabled>Start Task</button>
+    </div>
+    <div class="inline" style="margin-left: 20px;">
+      <label>Answer to Questions:</label><br>
+      <input type="text" id="answerInput" placeholder="Enter your answer"><br>
+      <button onclick="sendAnswer()" id="answerBtn" disabled>Send Answer</button>
+    </div>
+  </div>
+
+  <!-- Log Section -->
+  <div class="section">
+    <h3>4. Message Log</h3>
+    <button onclick="clearLog()">Clear Log</button>
+    <div id="log"></div>
+  </div>
 
   <script>
-    let socket;
+    let ws = null;
+    let token = null;
+    let isAuthenticated = false;
 
     function log(message) {
-      const logDiv = document.getElementById("log");
-      logDiv.textContent += message + "\n";
-      logDiv.scrollTop = logDiv.scrollHeight;
+      const timestamp = new Date().toLocaleTimeString();
+      document.getElementById('log').textContent += `[${timestamp}] ${message}\n`;
+      document.getElementById('log').scrollTop = document.getElementById('log').scrollHeight;
     }
 
-    function startProcess() {
-      const input = document.getElementById("startInput").value;
-      socket = new WebSocket("ws://localhost:8000/api/ws");
+    function clearLog() {
+      document.getElementById('log').textContent = '';
+    }
 
-      socket.onopen = () => {
-        log("WebSocket connection opened.");
-        socket.send(JSON.stringify({
-          event: "start",
-          message: input
-        }));
+    function updateConnectionStatus(status, className) {
+      const statusEl = document.getElementById('connectionStatus');
+      statusEl.textContent = status;
+      statusEl.className = `status ${className}`;
+    }
+
+    function updateButtons() {
+      const connected = ws && ws.readyState === WebSocket.OPEN;
+      document.getElementById('connectBtn').disabled = connected;
+      document.getElementById('disconnectBtn').disabled = !connected;
+      document.getElementById('startBtn').disabled = !connected || !isAuthenticated;
+      document.getElementById('answerBtn').disabled = !connected || !isAuthenticated;
+    }
+
+    async function createSession() {
+      const googleApiKey = document.getElementById('googleApiKey').value.trim();
+      const tavilyApiKey = document.getElementById('tavilyApiKey').value.trim();
+
+      if (!googleApiKey) {
+        alert('Google API Key is required');
+        return;
+      }
+
+      const payload = {
+        google_api_key: googleApiKey
       };
 
-      socket.onmessage = (event) => {
+      if (tavilyApiKey) {
+        payload.tavily_api_key = tavilyApiKey;
+      }
+
+      try {
+        log('Creating session...');
+        const response = await fetch('http://localhost:8000/api/create-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        token = data.token;
+        
+        document.getElementById('sessionStatus').innerHTML = 
+          '<div class="status connected">Session created successfully! Token obtained.</div>';
+        log('Session created successfully');
+        log(`Token: ${token.substring(0, 20)}...`);
+
+      } catch (error) {
+        log(`Session creation failed: ${error.message}`);
+        document.getElementById('sessionStatus').innerHTML = 
+          `<div class="status disconnected">Session creation failed: ${error.message}</div>`;
+      }
+    }
+
+    function connectWebSocket() {
+      if (!token) {
+        alert('Please create a session first to get a token');
+        return;
+      }
+
+      const wsUrl = document.getElementById('wsUrl').value;
+      log(`Connecting to ${wsUrl}...`);
+
+      ws = new WebSocket(wsUrl);
+
+      ws.onopen = function() {
+        log('WebSocket connected');
+        updateConnectionStatus('Connected - Authenticating...', 'connected');
+        
+        // Send authentication as first message
+        const authMessage = {
+          event: "auth",
+          token: token
+        };
+        
+        log('Sending authentication...');
+        ws.send(JSON.stringify(authMessage));
+        updateButtons();
+      };
+
+      ws.onmessage = function(event) {
         const data = JSON.parse(event.data);
-        log("Received: " + JSON.stringify(data));
+        log(`Received: ${JSON.stringify(data, null, 2)}`);
 
-        if (data.type === "question") {
-          document.getElementById("questionArea").style.display = "block";
-          document.getElementById("currentQuestion").textContent = data.question;
+        if (data.type === 'auth_success') {
+          isAuthenticated = true;
+          updateConnectionStatus('Connected & Authenticated', 'authenticated');
+          log('Authentication successful!');
+        } else if (data.type === 'error') {
+          log(`Error: ${data.message}`);
+          if (data.message.includes('token') || data.message.includes('auth')) {
+            isAuthenticated = false;
+            updateConnectionStatus('Authentication Failed', 'disconnected');
+          }
+        } else if (data.type === 'question') {
+          log(`❓ QUESTION FROM CREW: ${data.question}`);
+          alert(`CrewAI is asking: ${data.question}\n\nPlease provide an answer in the answer field.`);
+        } else if (data.type === 'status') {
+          log(`📋 STATUS: ${data.message}`);
+        } else if (data.type === 'confirmation') {
+          log(`✅ CONFIRMATION: ${data.message}`);
         }
 
-        if (data.type === "final_result") {
-          document.getElementById("questionArea").style.display = "block";
-          document.getElementById("currentQuestion").textContent = data.result;
-        }
+        updateButtons();
       };
 
-      socket.onclose = () => {
-        log("WebSocket connection closed.");
+      ws.onclose = function(event) {
+        log(`WebSocket closed. Code: ${event.code}, Reason: ${event.reason}`);
+        updateConnectionStatus('Disconnected', 'disconnected');
+        isAuthenticated = false;
+        updateButtons();
       };
 
-      socket.onerror = (error) => {
-        log("WebSocket error: " + error.message);
+      ws.onerror = function(error) {
+        log(`WebSocket error: ${error}`);
+        updateConnectionStatus('Connection Error', 'disconnected');
+        updateButtons();
       };
+    }
+
+    function disconnectWebSocket() {
+      if (ws) {
+        ws.close();
+        ws = null;
+        isAuthenticated = false;
+        log('WebSocket disconnected by user');
+        updateConnectionStatus('Disconnected', 'disconnected');
+        updateButtons();
+      }
+    }
+
+    function startTask() {
+      if (!ws || ws.readyState !== WebSocket.OPEN || !isAuthenticated) {
+        alert('Please connect and authenticate first');
+        return;
+      }
+
+      const message = document.getElementById('taskMessage').value.trim();
+      if (!message) {
+        alert('Please enter a task message');
+        return;
+      }
+
+      const startMessage = {
+        event: "start",
+        message: message
+      };
+
+      log(`Sending start message: ${JSON.stringify(startMessage)}`);
+      ws.send(JSON.stringify(startMessage));
     }
 
     function sendAnswer() {
-      const answer = document.getElementById("answerInput").value;
-      if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: "answer", answer: answer }));
-        log("Sent answer: " + answer);
-        document.getElementById("answerInput").value = "";
-        document.getElementById("questionArea").style.display = "none";
+      if (!ws || ws.readyState !== WebSocket.OPEN || !isAuthenticated) {
+        alert('Please connect and authenticate first');
+        return;
       }
+
+      const answer = document.getElementById('answerInput').value.trim();
+      if (!answer) {
+        alert('Please enter an answer');
+        return;
+      }
+
+      const answerMessage = {
+        answer: answer
+      };
+
+      log(`Sending answer: ${JSON.stringify(answerMessage)}`);
+      ws.send(JSON.stringify(answerMessage));
+      
+      // Clear the answer input after sending
+      document.getElementById('answerInput').value = '';
     }
+
+    // Initialize buttons on page load
+    updateButtons();
   </script>
 
 </body>
