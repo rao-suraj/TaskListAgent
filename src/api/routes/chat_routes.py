@@ -116,7 +116,6 @@ async def websocket_endpoint(websocket: WebSocket):
         # Authentication successful
         authenticated = True
         envs = session_env_store[session_id]
-        
         await websocket.send_json({
             "type": "auth_success",
             "message": "Authentication successful"
@@ -149,7 +148,10 @@ async def websocket_endpoint(websocket: WebSocket):
         return
 
     # Initialize CrewAI after successful authentication
-    task_list_crew = TasklistAgentCrewAi().crew()
+    task_list_crew = TasklistAgentCrewAi(
+        google_api_key=envs.get("GOOGLE_API_KEY"),
+        tavily_api_key=envs.get("TAVILY_API_KEY", None)
+    ).crew()
     crew_service.set_crew(task_list_crew)
     result_queue = queue.Queue()
     current_thread: Optional[threading.Thread] = None

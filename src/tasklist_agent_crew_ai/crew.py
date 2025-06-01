@@ -7,40 +7,55 @@ import os
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
-text_source = TextFileKnowledgeSource(
-    file_paths=["examples.txt"]
-)
-
 @CrewBase
 class TasklistAgentCrewAi():
+
 	"""TasklistAgentCrewAi crew"""
 
 	agents_config = 'config/agents.yaml'
 	tasks_config = 'config/tasks.yaml'
 
+	def __init__(self, google_api_key, tavily_api_key=None):
+		super().__init__()
+		os.environ['GEMINI_API_KEY'] = google_api_key
+		if tavily_api_key is not None:
+			os.environ['TAVILY_API_KEY'] = tavily_api_key
+		self.tavily_api_key = tavily_api_key
+        
+        # Create knowledge source with dynamic API key
+		self.text_source = TextFileKnowledgeSource(
+            file_paths=["examples.txt"]
+        )
+
 	@agent
 	def business_analyst(self) -> Agent:
-		return Agent(
+		agent = Agent(
 			config=self.agents_config['business_analyst'],
 			verbose=True,
 			multimodal=True,
-			tools=[HumanInteractionTool(),TavilySearchTool()],
 		)
+		if self.tavily_api_key is not None:
+			agent.tools = [HumanInteractionTool(),TavilySearchTool()]
+		else:
+			agent.tools = [HumanInteractionTool()]
+		return agent
 
 	@agent
 	def developer(self) -> Agent:
-		return Agent(
+		agent = Agent(
 			config=self.agents_config['developer'],
 			verbose=True,
-			tools=[TavilySearchTool()],
 		)
+		if self.tavily_api_key is not None:
+			agent.tools = [TavilySearchTool()]
+		return agent		
 	
 	@agent
 	def project_manager(self) -> Agent:
 		return Agent(
 			config=self.agents_config['project_manager'],
 			verbose=True,
-			knowledge_sources=[text_source],
+			knowledge_sources=[self.text_source],
 			embedder =dict(
                 provider="google", 
                 config=dict(

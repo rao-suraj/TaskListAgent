@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: my-fastapi-app
+    env: python
+    plan: free
+    # We’ll install from requirements.txt. If you need any build step:
+    buildCommand: "pip install -r requirements.txt"
+    # Use our start.sh to launch Uvicorn:
+    startCommand: "./start.sh"
+    envVars: []   # ← We leave this empty because user API keys come in at runtime.
