@@ -9,4 +9,4 @@ services:
     startCommand: "./start.sh"
     envVars:
       - key: PYTHONPATH
-        value: ./src
+        value: .
