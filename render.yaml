@@ -7,4 +7,6 @@ services:
     buildCommand: "pip install -r requirements.txt"
     # Use our start.sh to launch Uvicorn:
     startCommand: "./start.sh"
-    envVars: []   # ← We leave this empty because user API keys come in at runtime.
+    envVars:
+      - key: PYTHONPATH
+        value: ./src
