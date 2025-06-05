@@ -11,7 +11,7 @@ import asyncio
 import json
 import jwt
 
-from tasklist_agent_crew_ai.crew import TasklistAgentCrewAi
+from ....tasklist_agent_crew_ai.crew import TasklistAgentCrewAi
 
 
 router = APIRouter(tags=["chat"])
