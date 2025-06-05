@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.routes.chat_routes import router as chat_router
+from .routes.chat_routes import router as chat_router
 
 app = FastAPI(title="Task List Agent API", description="API to chat with Task list agents")
 

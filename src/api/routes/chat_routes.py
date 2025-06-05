@@ -5,8 +5,8 @@ from uuid import uuid4
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException
 from litellm import BaseModel, Field
 from pydantic import Extra
-from api.auth.jwt_handler import create_jwt, verify_jwt
-from api.services.crew_service import crew_service
+from ..auth.jwt_handler import create_jwt, verify_jwt
+from ..services.crew_service import crew_service
 import asyncio
 import json
 import jwt
