@@ -4,7 +4,7 @@ import warnings
 
 from datetime import datetime
 
-from tasklist_agent_crew_ai.crew import TasklistAgentCrewAi
+from .crew import TasklistAgentCrewAi
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 

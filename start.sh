@@ -7,7 +7,7 @@ ls -la
 echo "Contents of src directory:"
 ls -la src/ || echo "src directory not found"
 echo "Contents of tasklist_agent_crew_ai:"
-ls -la tasklist_agent_crew_ai/ || echo "tasklist_agent_crew_ai directory not found"
+ls -la src/tasklist_agent_crew_ai/ || echo "tasklist_agent_crew_ai directory not found"
 echo "=================="
 
 # Since we're already in /opt/render/project/src, run uvicorn with:

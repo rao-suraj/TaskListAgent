@@ -2,7 +2,7 @@ from crewai.tools import BaseTool
 from typing import Type
 from pydantic import BaseModel, Field
 
-from api.services.crew_service import crew_service
+from ...api.services.crew_service import crew_service
 
 class HumanInteractionInput(BaseModel):
     """Input schema for HumanInteractionTool."""

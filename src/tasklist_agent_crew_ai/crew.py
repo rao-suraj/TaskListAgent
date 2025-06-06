@@ -1,8 +1,8 @@
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.knowledge.source.text_file_knowledge_source import TextFileKnowledgeSource
-from tasklist_agent_crew_ai.tools.human_interacton_tool import HumanInteractionTool
-from tasklist_agent_crew_ai.tools.tavity_search_tool import TavilySearchTool
+from .tools.human_interacton_tool import HumanInteractionTool
+from .tools.tavity_search_tool import TavilySearchTool
 import os
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
