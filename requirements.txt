@@ -1,6 +1,6 @@
-crewai==0.121.1
+crewai==0.126.0
 fastapi==0.115.12
-litellm==1.68.0
+litellm==1.72.1
 pydantic==2.11.5
 PyJWT==2.10.1
 PyJWT==2.10.1
