@@ -171,11 +171,11 @@ async def websocket_endpoint(websocket: WebSocket):
                 msg = result_queue.get_nowait()
                 await websocket.send_json(msg)
 
-            while not crew_service.question_queue.empty():
-                question = crew_service.question_queue.get_nowait()
+            while not crew_service.message_queue.empty():
+                message = crew_service.message_queue.get_nowait()
                 await websocket.send_json({
-                    "type": "question",
-                    "question": question
+                    "type": "message",
+                    "message": message
                 })
 
             try:
