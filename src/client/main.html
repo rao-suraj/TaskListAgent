@@ -108,7 +108,7 @@
     <h3>2. WebSocket Connection</h3>
     <div>
       <label>WebSocket URL:</label><br>
-      <input type="text" id="wsUrl" value="wss://tasklistagent.onrender.com/api/ws" style="width: 400px;">
+      <input type="text" id="wsUrl" value="ws://localhost:8000/api/ws" style="width: 400px;">
     </div>
     <div>
       <button onclick="connectWebSocket()" id="connectBtn">Connect WebSocket</button>
@@ -187,7 +187,7 @@
 
       try {
         log('Creating session...');
-        const response = await fetch('https://tasklistagent.onrender.com/api/create-session', {
+        const response = await fetch('http://localhost:8000/api/create-session', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

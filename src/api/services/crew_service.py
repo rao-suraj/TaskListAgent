@@ -6,6 +6,7 @@ class CrewService:
     def __init__(self):
         self.question_queue = queue.Queue()
         self.answer_queue = queue.Queue()
+        self.message_queue = queue.Queue()
         self.crew = None
     
     def set_crew(self, crew):
@@ -43,11 +44,18 @@ class CrewService:
         try:
             self.question_queue=queue.Queue()  # Clear any previous questions
             self.answer_queue=queue.Queue()  # Clear any previous answers
+            self.message_queue=queue.Queue()  # Clear any previous messages
             result = self.crew.kickoff(inputs={"user_input": message})
             print(f"Result from crew: {result}")
             result_queue.put({"type": "final_result", "result": str(result)})
         except Exception as e:
             result_queue.put({"type": "error", "error": str(e)})
+
+    def send_message(self, message: str):
+        """Send a message to the crew"""
+        self.message_queue.put(message)
+        print(f"Message sent to crew: {message}")
+    
 
     
 
