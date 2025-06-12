@@ -6,7 +6,7 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException
 from litellm import BaseModel, Field
 from pydantic import Extra
 from ..auth.jwt_handler import create_jwt, verify_jwt
-from ..services.crew_service import crew_service
+from ..services.crew_service import CrewService
 import asyncio
 import json
 import jwt
@@ -18,6 +18,8 @@ router = APIRouter(tags=["chat"])
 
 session_env_store: Dict[str, Dict] = {}
 session_ttl: Dict[str, asyncio.Task] = {}
+# NEW: Store crew service instances per session
+session_crew_services: Dict[str, object] = {}
 
 
 class EnvPayload(BaseModel):
@@ -57,6 +59,8 @@ async def expire_session(session_id: str, delay: int):
     await asyncio.sleep(delay)
     session_env_store.pop(session_id, None)
     session_ttl.pop(session_id, None)
+    #Clean up crew service instance
+    session_crew_services.pop(session_id, None)
 
 @router.websocket("/ws")    
 async def websocket_endpoint(websocket: WebSocket):
@@ -147,20 +151,32 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.close(code=1008)
         return
 
-    # Initialize CrewAI after successful authentication
-    task_list_crew = TasklistAgentCrewAi(
-        google_api_key=envs.get("GOOGLE_API_KEY"),
-        tavily_api_key=envs.get("TAVILY_API_KEY", None)
-    ).crew()
-    crew_service.set_crew(task_list_crew)
+    # Create or get crew service instance for this session
+    if session_id not in session_crew_services:
+        # Create a NEW instance of CrewService for this session
+        session_crew_service = CrewService()
+        
+        # Initialize CrewAI after successful authentication
+        task_list_crew = TasklistAgentCrewAi(
+            google_api_key=envs.get("GOOGLE_API_KEY"),
+            tavily_api_key=envs.get("TAVILY_API_KEY", None),
+            crew_service=session_crew_service
+        ).crew()
+        
+        session_crew_service.set_crew(task_list_crew)
+        session_crew_services[session_id] = session_crew_service
+    else:
+        session_crew_service = session_crew_services[session_id]
+    
     result_queue = queue.Queue()
     current_thread: Optional[threading.Thread] = None
 
     try:
         while True:
+            # Use session-specific crew service
             # Check for CrewAI questions
-            while not crew_service.question_queue.empty():
-                question = crew_service.question_queue.get_nowait()
+            while not session_crew_service.question_queue.empty():
+                question = session_crew_service.question_queue.get_nowait()
                 await websocket.send_json({
                     "type": "question",
                     "question": question
@@ -171,8 +187,8 @@ async def websocket_endpoint(websocket: WebSocket):
                 msg = result_queue.get_nowait()
                 await websocket.send_json(msg)
 
-            while not crew_service.message_queue.empty():
-                message = crew_service.message_queue.get_nowait()
+            while not session_crew_service.message_queue.empty():
+                message = session_crew_service.message_queue.get_nowait()
                 await websocket.send_json({
                     "type": "message",
                     "message": message
@@ -198,7 +214,11 @@ async def websocket_endpoint(websocket: WebSocket):
         
                     # Step 2: Create fresh queue for new conversation
                     result_queue = queue.Queue()
-                    current_thread = threading.Thread(target=crew_service.run_crew_process, args=(message, result_queue))
+                    # Use session-specific crew service
+                    current_thread = threading.Thread(
+                        target=session_crew_service.run_crew_process, 
+                        args=(message, result_queue)
+                    )
                     current_thread.daemon = True
                     current_thread.start()
                     await websocket.send_json({
@@ -208,8 +228,9 @@ async def websocket_endpoint(websocket: WebSocket):
 
                 elif "answer" in user_message:
                     print(f"Received answer: {user_message['answer']}")
-                    crew_service.answer_queue.put(user_message["answer"])
-                    print(f"Answer queue size: {crew_service.answer_queue.qsize()}")
+                    # Use session-specific crew service
+                    session_crew_service.answer_queue.put(user_message["answer"])
+                    print(f"Answer queue size: {session_crew_service.answer_queue.qsize()}")
                     await websocket.send_json({
                         "type": "confirmation",
                         "message": "Answer received"
@@ -219,7 +240,9 @@ async def websocket_endpoint(websocket: WebSocket):
                 await asyncio.sleep(0.1)
 
     except WebSocketDisconnect:
-        print("Client disconnected")
+        print(f"Client disconnected for session: {session_id}")
+        # Clean up session data immediately on disconnect
+        session_crew_services.pop(session_id, None)
     except Exception as e:
         print(f"WebSocket error: {e}")
         await websocket.close(code=1011)
