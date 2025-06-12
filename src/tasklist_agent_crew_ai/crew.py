@@ -16,7 +16,7 @@ class TasklistAgentCrewAi():
 	agents_config = 'config/agents.yaml'
 	tasks_config = 'config/tasks.yaml'
 
-	def __init__(self, google_api_key, tavily_api_key=None):
+	def __init__(self,crew_service, google_api_key, tavily_api_key=None,):
 		super().__init__()
 		os.environ['GEMINI_API_KEY'] = google_api_key
 		if tavily_api_key is not None:
@@ -27,6 +27,7 @@ class TasklistAgentCrewAi():
 		self.text_source = TextFileKnowledgeSource(
             file_paths=["examples.txt"]
         )
+		self.crew_service = crew_service
 
 	@agent
 	def business_analyst(self) -> Agent:
@@ -36,9 +37,9 @@ class TasklistAgentCrewAi():
 			multimodal=True,
 		)
 		if self.tavily_api_key is not None:
-			agent.tools = [HumanInteractionTool(),TavilySearchTool()]
+			agent.tools = [HumanInteractionTool(crew_service_instance=self.crew_service),TavilySearchTool()]
 		else:
-			agent.tools = [HumanInteractionTool()]
+			agent.tools = [HumanInteractionTool(crew_service_instance=self.crew_service)]
 		return agent
 
 	@agent
@@ -93,5 +94,5 @@ class TasklistAgentCrewAi():
 			tasks= self.tasks,
 			process=Process.sequential,
 			verbose=True,
-			task_callback=AgentSwitchHandler.task_callback
+			task_callback=AgentSwitchHandler(crew_service_instance=self.crew_service).task_callback
 		)
