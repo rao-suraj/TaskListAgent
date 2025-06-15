@@ -6,10 +6,11 @@ requirement_generation_task:
     </human_input>
     and understand the project function, non functional and technical requirements and create Product Requirements Document and Technical Requirements Document.
     <instructions>
-      1.IMPROTANT: Ask human relevant questions regarding function and tech stack if not specified by user using human interaction tool. Don't assume features and tech stack by yourself.Keep the number of quesion less then 3. 
+      1.IMPROTANT: Ask human relevant questions regarding function and tech stack if not specified by user using human interaction tool. Don't assume features and tech stack by yourself. 
       2.IMPORTANT: Group related question together for reducing the number of questions.
       3.IMPORTANT: At the end ask for human confirmation by providing the documents using human interaction. Then provide the final output.
-      4.Use the web search tool to get additional information if required.
+      4.Use the web search tool to get additional information if required. 
+      5.If you don't know about the things mentioned example feature or requirement first search it no web and if still confused ask the user for details. 
     </instructions>
   expected_output: >
     Product Requirements Document and Technical Requirements Document.
