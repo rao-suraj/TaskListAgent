@@ -1,6 +1,6 @@
 crewai==0.165.1
 fastapi==0.115.12
-litellm==1.68.0
+litellm==1.74.9
 pydantic==2.11.5
 PyJWT==2.10.1
 PyJWT==2.10.1
