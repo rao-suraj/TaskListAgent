@@ -10,6 +10,7 @@ from ..services.crew_service import CrewService
 import asyncio
 import json
 import jwt
+import requests
 
 from ...tasklist_agent_crew_ai.crew import TasklistAgentCrewAi
 
@@ -37,14 +38,45 @@ class EnvPayload(BaseModel):
     class Config:
         extra = Extra.forbid 
 
+# @router.post("/create-session")
+# async def create_session(payload: EnvPayload):
+#     session_id = str(uuid4())
+
+#     clean_envs: dict[str, str] = {
+#         "GOOGLE_API_KEY": payload.google_api_key,
+#     }
+
+#     if validate_google_api_key(payload.google_api_key) != True:
+        
+
+#     if payload.tavily_api_key:
+#         clean_envs["TAVILY_API_KEY"] = payload.tavily_api_key
+    
+
+
+#     session_env_store[session_id] = clean_envs
+
+#     token = create_jwt(session_id)
+
+#     # TTL task to expire session
+#     session_ttl[session_id] = asyncio.create_task(expire_session(session_id, delay=900))  # 15 minutes
+#     return {"token": token}
+
 @router.post("/create-session")
 async def create_session(payload: EnvPayload):
     session_id = str(uuid4())
 
-    clean_envs: dict[str, str] = {
-        "GOOGLE_API_KEY": payload.google_api_key,
-    }
+    clean_envs: dict[str, str] = {}
+
+    # ✅ Validate Google API Key
+    if not await validate_google_api_key(payload.google_api_key):
+        raise HTTPException(status_code=400, detail="Invalid Google API Key")
+    clean_envs["GOOGLE_API_KEY"] = payload.google_api_key
+
+    # ✅ Validate Tavily API Key (if provided)
     if payload.tavily_api_key:
+        if not await validate_tavily_api_key(payload.tavily_api_key):
+            raise HTTPException(status_code=400, detail="Invalid Tavily API Key")
         clean_envs["TAVILY_API_KEY"] = payload.tavily_api_key
 
     session_env_store[session_id] = clean_envs
@@ -52,7 +84,9 @@ async def create_session(payload: EnvPayload):
     token = create_jwt(session_id)
 
     # TTL task to expire session
-    session_ttl[session_id] = asyncio.create_task(expire_session(session_id, delay=900))  # 15 minutes
+    session_ttl[session_id] = asyncio.create_task(
+        expire_session(session_id, delay=900)  # 15 minutes
+    )
     return {"token": token}
 
 async def expire_session(session_id: str, delay: int):
@@ -246,3 +280,23 @@ async def websocket_endpoint(websocket: WebSocket):
     except Exception as e:
         print(f"WebSocket error: {e}")
         await websocket.close(code=1011)
+
+# --- API key validators ---
+async def validate_google_api_key(api_key: str) -> bool:
+    url = "https://generativelanguage.googleapis.com/v1/models"
+    params = {"key": api_key}
+    try:
+        resp = requests.get(url, params=params, timeout=5)
+        return resp.status_code == 200
+    except Exception:
+        return False
+
+async def validate_tavily_api_key(api_key: str) -> bool:
+    url = "https://api.tavily.com/search"
+    headers = {"Authorization": f"Bearer {api_key}"}
+    payload = {"query": "test"}
+    try:
+        resp = requests.post(url, json=payload, headers=headers, timeout=5)
+        return resp.status_code == 200
+    except Exception:
+        return False
