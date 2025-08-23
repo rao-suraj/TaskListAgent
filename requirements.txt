@@ -1,4 +1,4 @@
-crewai==0.126.0
+crewai==0.165.1
 fastapi==0.115.12
 litellm==1.68.0
 pydantic==2.11.5
