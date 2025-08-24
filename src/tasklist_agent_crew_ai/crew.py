@@ -52,8 +52,6 @@ class TasklistAgentCrewAi():
 			agent.tools = [HumanInteractionTool(crew_service_instance=self.crew_service),TavilySearchTool()]
 		else:
 			agent.tools = [HumanInteractionTool(crew_service_instance=self.crew_service)]
-		if self.tavily_api_key is not None:
-			agent.tools = [TavilySearchTool()]
 		return agent		
 	
 	@agent
@@ -71,6 +69,7 @@ class TasklistAgentCrewAi():
             ),
 		)
 		agent.tools = [HumanInteractionTool(crew_service_instance=self.crew_service)]
+		return agent
 
 	@task
 	def requirement_generation_task(self) -> Task:
