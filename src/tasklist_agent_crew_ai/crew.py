@@ -49,12 +49,16 @@ class TasklistAgentCrewAi():
 			verbose=True,
 		)
 		if self.tavily_api_key is not None:
+			agent.tools = [HumanInteractionTool(crew_service_instance=self.crew_service),TavilySearchTool()]
+		else:
+			agent.tools = [HumanInteractionTool(crew_service_instance=self.crew_service)]
+		if self.tavily_api_key is not None:
 			agent.tools = [TavilySearchTool()]
 		return agent		
 	
 	@agent
 	def project_manager(self) -> Agent:
-		return Agent(
+		agent =  Agent(
 			config=self.agents_config['project_manager'],
 			verbose=True,
 			knowledge_sources=[self.text_source],
@@ -66,6 +70,7 @@ class TasklistAgentCrewAi():
                 ),
             ),
 		)
+		agent.tools = [HumanInteractionTool(crew_service_instance=self.crew_service)]
 
 	@task
 	def requirement_generation_task(self) -> Task:
@@ -94,5 +99,6 @@ class TasklistAgentCrewAi():
 			tasks= self.tasks,
 			process=Process.sequential,
 			verbose=True,
-			task_callback=AgentSwitchHandler(crew_service_instance=self.crew_service).task_callback
+			task_callback=AgentSwitchHandler(crew_service_instance=self.crew_service).task_callback,
+			max_rpm=10
 		)
