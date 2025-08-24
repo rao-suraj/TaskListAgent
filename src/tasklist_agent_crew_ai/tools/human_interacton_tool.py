@@ -11,17 +11,7 @@ class HumanInteractionTool(BaseTool):
     description: str = "This tool will help you to ask questions to the human or ask for approval for the documents. Send input as String and return human answers as String."
     args_schema: Type[BaseModel] = HumanInteractionInput
     
-    # Define as a Pydantic field
-    crew_service_instance: Any = Field(default=None, exclude=True, repr=False)
-    
-    def __init__(self, crew_service_instance=None, **kwargs):
-        super().__init__(crew_service_instance=crew_service_instance, **kwargs)
     
     def _run(self, argument: str) -> str:
-        if not self.crew_service_instance:
-            raise ValueError("CrewService instance not provided")
-            
-        self.crew_service_instance.question_queue.put(argument)
-        res = self.crew_service_instance.answer_queue.get()
-        print(f"Human Interaction Tool: {res}")
+        res = input(f"{argument} \n")
         return res
