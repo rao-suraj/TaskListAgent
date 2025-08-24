@@ -99,6 +99,5 @@ class TasklistAgentCrewAi():
 			tasks= self.tasks,
 			process=Process.sequential,
 			verbose=True,
-			task_callback=AgentSwitchHandler(crew_service_instance=self.crew_service).task_callback,
-			max_rpm=10
+			task_callback=AgentSwitchHandler(crew_service_instance=self.crew_service).task_callback
 		)
