@@ -8,7 +8,7 @@ requirement_generation_task:
     <instructions>
       1.IMPROTANT: Ask human relevant questions regarding function and tech stack if not specified by user using human interaction tool. Don't assume features and tech stack by yourself. 
       2.IMPORTANT: Group related question together for reducing the number of questions.
-      3.IMPORTANT: At the end ask for human confirmation by providing the documents using human interaction tool. After aproval provide the final output.
+      3.IMPORTANT: Alwasy get confirmation form user for your final answer (Product Requirements Document and Technical Requirements Document) using human interaction tool by providing the documents. Give final answer after confiramtion. Don't ask confiramtion for input give to you.
       4.Use the web search tool to get additional information if required. 
       5.If you don't know about the things mentioned example feature or requirement first search it no web and if still confused ask the user for details. 
     </instructions>
@@ -65,7 +65,7 @@ execution_plannig_task:
     2.IMPORTANT: Include Detailed execution plan in Development Workflow Plan.
       Example: Wrong "use Payment gateway for payment" Correct "Integrate Razorpay API for payment"
     3.Use the web search tool for latest tech related info.
-    4.IMPORTANT: At the end ask for human confirmation by providing the documents using human interaction. Only after confirmation provide the final output.
+    4.IMPORTANT: Alwasy get confirmation form user for your final answer (Software Design Document, Development Workflow Plan and Order of execution ) using human interaction tool by providing the documents. Give final answer after confiramtion. Don't ask confiramtion for input give to you.
     </instruction>
   expected_output: >
     Software Design Document, Development Workflow Plan and Order of execution 
@@ -114,7 +114,7 @@ task_list_creation_task:
     <instruction>
     1.IMPORTANT: Do not add anything new example feature, modules or tech, screens etc to the task list that is not mentioned in Software Design Document,Development WorkFlow Plan or Order of execution.
     2.Include modules like UI Design, Backend Development, API Development, Testing and Deployment  in the task list if applicable.
-    3.IMPORTANT: At the end ask for human confirmation by providing the documents using human interaction.Ones confirmed by user, provide the final output.
+    3.IMPORTANT: Alwasy get confirmation form user for your final answer (Task List) using human interaction tool by providing the task list. Then give final answer. Don't ask confiramtion for input give to you.
     </instruction>
   expected_output: >
     <task_list_structure>
