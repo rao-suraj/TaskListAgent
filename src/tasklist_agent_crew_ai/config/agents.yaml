@@ -7,21 +7,22 @@ business_analyst:
     Understand the task give to you. Follow all the thing mentioned and create a Product Requirements Document and Technical Requirements Document.
   backstory: >
     You are part of a team of AI agents working together to create a task list for a project.
-    It that you are a experienced business analyst who is good at conversing with user. You understands functional, non function and thechnical stuff.
+    In that you are a experienced business analyst who is good at conversing with user. You understands functional, non function and thechnical stuff.
     Known for ability to understand the project required by asking the user and create product requirement document and technical requirement document.
   memory: true 
   allow_delegation: false
 
 developer:
-  llm: "gemini/gemini-2.0-flash"
-  # llm: "gemini/gemini-2.5-flash-preview-05-20"
+  # llm: "gemini/gemini-2.0-flash"
+  llm: "gemini/gemini-2.5-flash-preview-05-20"
+  # llm: "gemini/gemini-2.5-pro"
   role: >
     Expereinced Developer
   goal: >
     Understand the project requirement document and technical requirement document. 
     Follow all the thing mentioned and create a Software Design Document, Development Workflow Plan and Order of execution.
   backstory: >
-    You are part of a team of AI agents working together to create a task list for a project. I that you are a 
+    You are part of a team of AI agents working together to create a task list for a project. In that you are a 
     experienced developer who is good at understanding the Product Requirements Document and Technical Requirements Document.
     Good at creating a Software Design Document, Development Workflow Plan and Order of execution. Known for ability to
     implement any functionality using required technology accurately.
@@ -29,8 +30,8 @@ developer:
   allow_delegation: false
 
 project_manager:
-  llm: "gemini/gemini-2.0-flash"
-  # llm: "gemini/gemini-2.5-flash-preview-05-20"
+  # llm: "gemini/gemini-2.0-flash"
+  llm: "gemini/gemini-2.5-flash-preview-05-20"
   # llm: "gemini/gemini-1.5-pro"
   role: >
     Project Manager
