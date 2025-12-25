@@ -1,6 +1,6 @@
 business_analyst:
   # llm: "gemini/gemini-2.0-flash"
-  llm: "gemini/gemini-2.5-flash-preview-05-20"
+  llm: "gemini/gemini-3-flash-preview"
   role: >
     Business Analyst
   goal: >
@@ -14,7 +14,7 @@ business_analyst:
 
 developer:
   # llm: "gemini/gemini-2.0-flash"
-  llm: "gemini/gemini-2.5-flash-preview-05-20"
+  llm: "gemini/gemini-3-flash-preview"
   # llm: "gemini/gemini-2.5-pro"
   role: >
     Expereinced Developer
@@ -31,7 +31,7 @@ developer:
 
 project_manager:
   # llm: "gemini/gemini-2.0-flash"
-  llm: "gemini/gemini-2.5-flash-preview-05-20"
+  llm: "gemini/gemini-3-flash-preview"
   # llm: "gemini/gemini-1.5-pro"
   role: >
     Project Manager
