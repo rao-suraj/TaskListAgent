@@ -38,30 +38,6 @@ class EnvPayload(BaseModel):
     class Config:
         extra = Extra.forbid 
 
-# @router.post("/create-session")
-# async def create_session(payload: EnvPayload):
-#     session_id = str(uuid4())
-
-#     clean_envs: dict[str, str] = {
-#         "GOOGLE_API_KEY": payload.google_api_key,
-#     }
-
-#     if validate_google_api_key(payload.google_api_key) != True:
-        
-
-#     if payload.tavily_api_key:
-#         clean_envs["TAVILY_API_KEY"] = payload.tavily_api_key
-    
-
-
-#     session_env_store[session_id] = clean_envs
-
-#     token = create_jwt(session_id)
-
-#     # TTL task to expire session
-#     session_ttl[session_id] = asyncio.create_task(expire_session(session_id, delay=900))  # 15 minutes
-#     return {"token": token}
-
 @router.post("/create-session")
 async def create_session(payload: EnvPayload):
     session_id = str(uuid4())

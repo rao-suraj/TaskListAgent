@@ -3,7 +3,7 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai.knowledge.source.text_file_knowledge_source import TextFileKnowledgeSource
 from .callback_handler.agent_switch_handler import AgentSwitchHandler
 from .tools.human_interacton_tool import HumanInteractionTool
-from .tools.tavity_search_tool import TavilySearchTool      # assembles handlers into a single manager :contentReference[oaicite:1]{index=1}
+from .tools.tavity_search_tool import TavilySearchTool
 import os
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
