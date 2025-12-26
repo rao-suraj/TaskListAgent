@@ -7,6 +7,7 @@ from litellm import BaseModel, Field
 from pydantic import Extra
 from ..auth.jwt_handler import create_jwt, verify_jwt
 from ..services.crew_service import CrewService
+from ..common.logger import logger
 import asyncio
 import json
 import jwt
@@ -111,7 +112,8 @@ async def websocket_endpoint(websocket: WebSocket):
             session_id = verify_jwt(token)
             print(f"Token verified for session: {session_id}")
         except jwt.PyJWTError as e:
-            print(f"JWT verification failed: {e}")
+            print()
+            logger.error(f"JWT verification failed for {session_id} : {e} ")
             await websocket.send_json({
                 "type": "error",
                 "message": "Invalid token"

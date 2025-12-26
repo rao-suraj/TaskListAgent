@@ -1,5 +1,6 @@
 import queue
 from typing import Any, Dict
+from ..common.logger import logger
 
 
 class CrewService:
@@ -30,6 +31,7 @@ class CrewService:
                 result = self.crew.kickoff(inputs={"user_input": message})
                 result_queue.put({"success": True, "result": result})
             except Exception as e:
+                logger.error(f"[CrewServic] {e}")
                 result_queue.put({"success": False, "error": str(e)})
         
         thread = threading.Thread(target=run_crew)
@@ -51,7 +53,8 @@ class CrewService:
             print(f"Result from crew: {result}")
             result_queue.put({"type": "final_result", "result": str(result)})
         except Exception as e:
-            result_queue.put({"type": "error", "error": str(e)})
+            logger.error(f"[CrewServic] {e}")
+            result_queue.put({"type": "error", "error": "Internal Server Error"})
 
     def send_message(self, message: str):
         """Send a message to the crew"""
