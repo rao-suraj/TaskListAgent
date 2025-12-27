@@ -1,4 +1,5 @@
 import queue
+import litellm
 from typing import Any, Dict
 from ..common.logger import logger
 
@@ -44,17 +45,46 @@ class CrewService:
     
     def run_crew_process(self, message: str, result_queue: queue.Queue):
         try:
-            # Clear any previous questions/answers/messages for this specific instance
-            self.question_queue = queue.Queue()  # Clear any previous questions
-            self.answer_queue = queue.Queue()   # Clear any previous answers
-            self.message_queue = queue.Queue()  # Clear any previous messages
+            # Clear queues
+            self.question_queue = queue.Queue()
+            self.answer_queue = queue.Queue()
+            self.message_queue = queue.Queue()
             
             result = self.crew.kickoff(inputs={"user_input": message})
-            print(f"Result from crew: {result}")
             result_queue.put({"type": "final_result", "result": str(result)})
+
+        except litellm.RateLimitError as e:
+            # Specifically handles the 429 Resource Exhausted error
+            logger.warning(f"[CrewService] Rate Limit Hit: {e}")
+            result_queue.put({
+                "type": "error", 
+                "error": "Rate limit exceeded. Please wait a moment before trying again.",
+                "code": 429
+            })
+
+        except litellm.AuthenticationError as e:
+            logger.error(f"[CrewService] Auth Error: {e}")
+            result_queue.put({
+                "type": "error", 
+                "error": "Authentication failed. Please check API keys.",
+                "code": 401
+            })
+
         except Exception as e:
-            logger.error(f"[CrewServic] {e}")
-            result_queue.put({"type": "error", "error": "Internal Server Error"})
+            # Fallback string matching for other providers or general errors
+            error_str = str(e).lower()
+            logger.error(f"[CrewService] {e}")
+            
+            if "quota exceeded" in error_str or "429" in error_str:
+                msg = "Resource exhausted: You have reached your API quota limit."
+            elif "invalid api key" in error_str or "401" in error_str:
+                msg = "Invalid API key provided."
+            elif "context_length_exceeded" in error_str:
+                msg = "The request is too long for the model's context window."
+            else:
+                msg = "An unexpected error occurred within the Crew process."
+
+            result_queue.put({"type": "error", "error": msg})
 
     def send_message(self, message: str):
         """Send a message to the crew"""
