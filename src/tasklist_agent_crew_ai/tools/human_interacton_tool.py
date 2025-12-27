@@ -10,7 +10,8 @@ class HumanInteractionTool(BaseTool):
     name: str = "Human Interaction Tool"
     description: str = (
     "Use this tool ONLY when you need clarification on a specific requirement "
-    "or when a major document is ready for a mid-point review. "
+    "When a major document is ready for a mid-point review."
+    "When you have any question for which you need answer from the user"
     "Do not use this tool for your final output delivery.")
     args_schema: Type[BaseModel] = HumanInteractionInput
     

@@ -115,9 +115,11 @@ task_list_creation_task:
     1.IMPORTANT: Do not add anything new example feature, modules or tech, screens etc to the task list that is not mentioned in Software Design Document,Development WorkFlow Plan or Order of execution.
     2.Include modules like UI Design, Backend Development, API Development, Testing and Deployment  in the task list if applicable.
     3.IMPORTANT: Alwasy get confirmation form user for your final answer (Task List) using human interaction tool by providing the task list. Then give final answer. Don't ask confiramtion for input give to you.
-    4.IMPORTANT: After you receive final approval via the Human Interaction Tool, you MUST summarize the result and provide it as your Final Answer in clear Markdown format. Do not end the process with a tool call..
+    4. IMPORTANT: Once you receive the 'Approved' string from the Human Interaction Tool, you must EXIT the tool loop and re-state the task list as your FINAL ANSWER. Use the exact structure defined in <task_list_structure>. Do not simply stop after the tool call.   
     </instruction>
   expected_output: >
+    The complete, finalized task list in Markdown format, following the <task_list_structure> 
+    only AFTER human approval has been confirmed via the Human Interaction Tool.
     <task_list_structure>
     ### Task list for [App Name]
       #### [Department Name]
