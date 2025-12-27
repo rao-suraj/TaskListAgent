@@ -8,7 +8,10 @@ class HumanInteractionInput(BaseModel):
 
 class HumanInteractionTool(BaseTool):
     name: str = "Human Interaction Tool"
-    description: str = "This tool will help you to ask questions to the human or ask for approval for the documents. Send input as String and return human answers as String."
+    description: str = (
+    "Use this tool ONLY when you need clarification on a specific requirement "
+    "or when a major document is ready for a mid-point review. "
+    "Do not use this tool for your final output delivery.")
     args_schema: Type[BaseModel] = HumanInteractionInput
     
     # Define as a Pydantic field
