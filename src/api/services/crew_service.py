@@ -58,7 +58,7 @@ class CrewService:
             logger.warning(f"[CrewService] Rate Limit Hit: {e}")
             result_queue.put({
                 "type": "error", 
-                "error": "Rate limit exceeded. Please wait a moment before trying again.",
+                "message": "Rate limit exceeded. Please wait a moment before trying again.",
                 "code": 429
             })
 
@@ -66,7 +66,7 @@ class CrewService:
             logger.error(f"[CrewService] Auth Error: {e}")
             result_queue.put({
                 "type": "error", 
-                "error": "Authentication failed. Please check API keys.",
+                "message": "Authentication failed. Please check API keys.",
                 "code": 401
             })
 
@@ -84,7 +84,7 @@ class CrewService:
             else:
                 msg = "An unexpected error occurred within the Crew process."
 
-            result_queue.put({"type": "error", "error": msg})
+            result_queue.put({"type": "error", "message": msg})
 
     def send_message(self, message: str):
         """Send a message to the crew"""
