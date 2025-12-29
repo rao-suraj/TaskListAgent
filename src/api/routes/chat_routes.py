@@ -85,6 +85,15 @@ async def websocket_endpoint(websocket: WebSocket):
     authenticated = False
     session_id = None
     envs = None
+    heartbeat_task = None # NEW: Reference for the background task
+
+    # NEW: Heartbeat function to keep Cloud Run connection alive
+    async def send_heartbeat():
+        try:
+            while True:
+                await asyncio.sleep(30)
+                await websocket.send_json({"type": "ping"})
+        except: pass
     
     try:
         # Wait for auth message with timeout
@@ -137,6 +146,7 @@ async def websocket_endpoint(websocket: WebSocket):
             "message": "Authentication successful"
         })
         print(f"Authentication successful for session: {session_id}")
+        heartbeat_task = asyncio.create_task(send_heartbeat())
         
     except asyncio.TimeoutError:
         print("Authentication timeout")
@@ -258,6 +268,10 @@ async def websocket_endpoint(websocket: WebSocket):
     except Exception as e:
         print(f"WebSocket error: {e}")
         await websocket.close(code=1011)
+    finally:
+        # NEW: Ensure the heartbeat stops when the connection ends
+        if heartbeat_task:
+            heartbeat_task.cancel()
 
 # --- API key validators ---
 async def validate_google_api_key(api_key: str) -> bool:
