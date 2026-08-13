@@ -63,7 +63,8 @@ class TasklistAgentCrewAi():
 			embedder =dict(
                 provider="google", 
                 config=dict(
-                    model="models/text-embedding-004", 
+                    # model="models/text-embedding-004", 
+					model="models/gemini-embedding-001",
 					api_key = GOOGLE_API_KEY,
                 ),
             ),
