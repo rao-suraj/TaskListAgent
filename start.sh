@@ -11,4 +11,4 @@ ls -la src/tasklist_agent_crew_ai/ || echo "tasklist_agent_crew_ai directory not
 echo "=================="
 
 # Since we're already in /opt/render/project/src, run uvicorn with:
-uvicorn src.api.main:app --host 0.0.0.0 --port "${PORT:-10000}"
+uv run uvicorn src.api.main:app --host 0.0.0.0 --port "${PORT:-10000}"
